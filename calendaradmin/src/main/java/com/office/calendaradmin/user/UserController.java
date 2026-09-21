@@ -46,7 +46,16 @@ public class UserController {
     ) {
         log.info("updateUserAuthority()");
 
-        return null;
+        if (request.get("authorityNo") == null) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("result", 0));
+        }
+
+        Map<String, Object> resultMap =
+                userService.updateUserAuthority(userNo, request.get("authorityNo"));
+
+
+        return ResponseEntity.ok(resultMap);
 
     }
 

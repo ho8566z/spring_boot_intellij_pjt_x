@@ -72,6 +72,9 @@ function initEvents() {
 
 }
 
+const UPDATE_USER_AUTHORITY_SUCCESS   = 1;
+const UPDATE_USER_AUTHORITY_FAIL      = 0;
+
 async function fetchUpdateUserAuthority(userNo, authorityNo) {
     console.log('fetchUpdateUserAuthority() CALLED!!');
 
@@ -83,7 +86,7 @@ async function fetchUpdateUserAuthority(userNo, authorityNo) {
         let response = await fetch(`/user/${userNo}/auth`, {
             method: 'PUT',
             headers: {
-                'Context-Type': 'application/json'
+                'Content-Type': 'application/json'
             },
             body: reqData
         });
@@ -92,12 +95,22 @@ async function fetchUpdateUserAuthority(userNo, authorityNo) {
             throw new Error('Network response was not ok');
         }
 
-        let data = response.json();
+        let data = await response.json();
         console.log('data: ', data);
+
+        if (data.result === UPDATE_USER_AUTHORITY_SUCCESS) {
+            alert('Authority change success!!!');
+            document.querySelector(`#user_${userNo} .mod_date`).textContent = data.mod_date;
+
+        } else {
+            alert('Authority change fail!!!');
+
+        }
 
 
     } catch (error) {
         console.log('fetchUpdateUserAuthority() COMMUNICATION ERROR!!', error);
+        alert('Authority change fail!!!');
 
     }
 

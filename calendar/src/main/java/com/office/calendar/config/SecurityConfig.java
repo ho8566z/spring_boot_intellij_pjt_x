@@ -38,9 +38,10 @@ public class SecurityConfig {
                                 "/member/signin",
                                 "/member/signin_confirm",
                                 "/member/findpassword",
-                                "/member/findpassword_confirm")
-                        .permitAll()
-                        .anyRequest().authenticated());
+                                "/member/findpassword_confirm").permitAll()
+                        .requestMatchers("/planner/**").hasAnyRole("USER")
+                        .anyRequest().authenticated()
+                );
 
         http
                 .formLogin(login -> login
@@ -69,7 +70,7 @@ public class SecurityConfig {
                 .logout(logout -> logout
                         .logoutUrl("/member/signout_confirm")
                         .logoutSuccessHandler((request, response, authentication) -> {
-                            log.info("SIGNOUT SUCCESS HANDLER()");
+                            log.info("signout success handler");
 
                             String targetURI = "/";
                             response.sendRedirect(targetURI);
