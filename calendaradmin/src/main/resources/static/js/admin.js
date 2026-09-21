@@ -3,10 +3,12 @@ document.addEventListener("DOMContentLoaded", function (){
 
     fetchGetAdmins();
 
+    initEvents();
+
 });
 
 async function fetchGetAdmins() {
-    console.log('fetchGetAdmins()');
+    console.log('fetchGetAdmins() called');
 
     try {
         let response = await fetch('/admin/admins', {
@@ -27,8 +29,9 @@ async function fetchGetAdmins() {
         let admins = data.admins
         for (let i = 0; admins.length; i++) {
             let template = document.querySelector('#list-template').content.cloneNode(true);
+            template.querySelector('tr').setAttribute('id', 'admins_' + admins[i].no);
             template.querySelector('.no').textContent = admins[i].no;
-            template.querySelector('.id').textContent = admins[i].id;
+            template.querySelector('select[name="authority"]').setAttribute('admin_no', admins[i].no);
             template.querySelector('select[name="authority"]').value = admins[i].authorityDto.no;
             template.querySelector('.mail').textContent = admins[i].mail;
             template.querySelector('.phone').textContent = admins[i].phone;
@@ -39,6 +42,62 @@ async function fetchGetAdmins() {
 
     } catch (error) {
         console.log('fetchGetAdmins() COMMUNICATION ERROR!!', error);
+
+    }
+
+}
+
+function initEvents() {
+    console.log('initEvents() called');
+
+    document.querySelector('#section_wrap').addEventListener('change', function (event) {
+        console.log('section_wrap CHANGE EVENTS');
+        console.log('event : ', event);
+
+        if (event.target.name === 'arthority') {
+            console.log('authority CHANGE');
+
+            let adminNo = event.target.getAttribute('admin_no');
+            let authorityNo = event.target.value;
+
+            console.log('adminNo : ', adminNo);
+            console.log('authorityNo : ', authorityNo);
+
+            fetchUpdateAdminAuthority();
+        }
+
+    })
+}
+
+async function fetchUpdateAdminAuthority(adminNo, authorityNo) {
+    console.log('fetchUpdateAdminAuthority() called')
+
+    let reqData = JSON.stringify({
+        'authorityNo': authorityNo
+    });
+
+    try {
+        let response = await fetch(`/admin/${adminNo}/auth`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: reqData
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok!');
+        }
+
+        console.log('fetchUpdateAdminAuthority() COMMUNICATION SUCCESS!!');
+
+        let data = await response.json();
+        console.log('data: ', data);
+
+
+
+    } catch (error) {
+        console.log('fetchUpdateAdminAuthority() COMMUNICATION ERROR!!', error);
 
     }
 

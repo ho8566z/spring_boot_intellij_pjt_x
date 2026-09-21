@@ -2,10 +2,9 @@ package com.office.calendaradmin.admin;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -36,6 +35,23 @@ public class AdminController {
         Map<String, Object> resultMap = adminService.admins();
 
         return resultMap;
+    }
+
+    // 관리자 권한 변경
+    @PutMapping("/{adminNo}/auth")
+    @ResponseBody
+    public Object updateAdminAuthority(
+            @PathVariable int adminNo,
+            @RequestBody Map<String, Integer> request
+    ) {
+        log.info("updateAdminAuthority()");
+
+        if (request.get("authorityNo") == null) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("result", null));
+        }
+
+        return null;
     }
 
 }
