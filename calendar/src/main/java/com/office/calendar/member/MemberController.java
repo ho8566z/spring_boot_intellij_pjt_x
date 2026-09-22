@@ -162,4 +162,16 @@ public class MemberController {
         return nextPage;
     }
 
+    // 권한이 없어서 접근이 막힌 경우
+    @GetMapping("/access_denied")
+    public String accessDenied() {
+        log.info("accessDenied()");
+
+        String nextPage = "member/access_denied";
+
+        return nextPage;
+
+    }
+
+
 }
