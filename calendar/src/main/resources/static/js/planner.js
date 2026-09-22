@@ -129,6 +129,21 @@ function initEvents() {
         }
     });
 
+    // change 이벤트 들의 처리
+    document.addEventListener('change', function (event) {
+
+        // 달력에서 년 변경 시
+        if (event.target.matches('#section_wrap select[name="p_year"]')) {
+            setMonthBySelectChanged();
+        }
+
+        // 달력에서 월 변경 시
+        if (event.target.matches('#section_wrap select[name="p_month"]')) {
+            setMonthBySelectChanged();
+        }
+
+    });
+
 }
 
 function setPreMonth() {
@@ -216,5 +231,27 @@ function removeCalenderTr () {
 
     let tbody = document.querySelector('#table_calender tbody');
     tbody.innerHTML = '';
+
+}
+
+function setMonthBySelectChanged() {
+    console.log('setMonthBySelectChanged() CALLED!!');
+
+    let temp_year = document.querySelector('select[name="p_year"]').value;
+    let temp_month = document.querySelector('select[name="p_month"]').value - 1;
+
+    let selectedCalender = new Date(temp_year, temp_month, 1);
+
+    // 데이터 설정
+    setCurrentCalender(
+        selectedCalender.getFullYear(),
+        selectedCalender.getMonth(),
+        selectedCalender.getDate(),
+        selectedCalender.getDay()
+    );
+
+    // 달력 UI 렌더링
+    removeCalenderTr();
+    addCalenderTr();
 
 }
