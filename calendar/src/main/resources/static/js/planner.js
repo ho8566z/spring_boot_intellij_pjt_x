@@ -62,7 +62,7 @@ function addCalenderTr() {
     // 달력 구성 날짜 데이터
     let dates = Array();
     let dateCnt = 1;
-    for(let i = 0; i < 42; i++) {
+    for (let i = 0; i < 42; i++) {
         if (i < thisCalenderStartDay || dateCnt > thisCalenderEndDate) {
             dates[i] = 0;
         } else {
@@ -90,8 +90,18 @@ function addCalenderTr() {
             if (dates[dateIndex] !== 0) {
                 // 날짜  UI
                 let dateDiv = document.createElement('div');
+                dateDiv.className = 'date';
                 dateDiv.textContent = dates[dateIndex];
                 td.appendChild(dateDiv);
+
+                // 일정 등록 버튼 UI
+                let writeDiv = document.createElement('div');
+                let writeLink = document.createElement('a');
+                writeLink.className = 'write';
+                writeLink.href = "#none";
+                writeLink.textContent = 'write';
+                writeDiv.appendChild(writeLink);
+                td.appendChild(writeDiv);
             }
 
             tr.appendChild(td);
@@ -103,30 +113,51 @@ function addCalenderTr() {
 
     }
 
-
 }
 
+// 이벤트 등록
 function initEvents() {
     console.log('initEvents() CALLED!!');
 
     // click 이벤트 들의 처리
     document.addEventListener('click', function (event) {
 
-        // 이전 달에서 이벤트 빌생 시
+        // 이전 달에서 이벤트 발생 시
         if (event.target.matches('#section_wrap .btn_pre')) {
             console.log('btn_pre CLICK!!');
 
             setPreMonth();
-
         }
 
-        // 다음 달에서 이벤트 빌생 시
+        // 다음 달에서 이벤트 발생 시
         if (event.target.matches('#section_wrap .btn_next')) {
             console.log('btn_next CLICK!!');
 
             setNextMonth();
+        }
+
+        // 달력에서 일정 등록 버튼(write)를 클릭 시
+        if (event.target.matches('#section_wrap a.write')) {
+            console.log('write CLICK');
+
+            let year = current_year;
+            let month = current_month + 1;
+
+            let dateElement = event.target.closest("div").parentElement.querySelector('div.date');
+            let date = dateElement ? dateElement.textContent.trim() : '';
+
+            showWeitePlanView(year, month, date);
 
         }
+
+        // 일정 등록 모달 닫기
+        if (event.target.matches('#write_plan input[value="CALCEL"]')) {
+            console.log('CALCEL BUTTON CLICK');
+
+            hideWritePlanView();
+
+        }
+
     });
 
     // change 이벤트 들의 처리
@@ -226,7 +257,7 @@ function setNextMonth() {
 
 }
 
-function removeCalenderTr () {
+function removeCalenderTr() {
     console.log('removeCalenderTr() CALLED!!');
 
     let tbody = document.querySelector('#table_calender tbody');
@@ -253,5 +284,19 @@ function setMonthBySelectChanged() {
     // 달력 UI 렌더링
     removeCalenderTr();
     addCalenderTr();
+
+}
+
+function showWeitePlanView(year, month, date) {
+    console.log('showWeitePlanView() CALLED!!');
+
+    document.querySelector('#write_plan').style.display = 'block';
+
+}
+
+function hideWritePlanView() {
+    console.log('hideWritePlanView() CALLED!!');
+
+    document.querySelector('#write_plan').style.display = 'none';
 
 }
