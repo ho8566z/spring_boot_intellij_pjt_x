@@ -62,7 +62,7 @@ function addCalenderTr() {
     // 달력 구성 날짜 데이터
     let dates = Array();
     let dateCnt = 1;
-    for (let i = 0; i < 42; i++) {
+    for(let i = 0; i < 42; i++) {
         if (i < thisCalenderStartDay || dateCnt > thisCalenderEndDate) {
             dates[i] = 0;
         } else {
@@ -86,7 +86,7 @@ function addCalenderTr() {
         for (let j = 0; j < 7; j++) {
             let td = document.createElement('td');
 
-            // 날짜UI
+            // 날짜 UI
             if (dates[dateIndex] !== 0) {
                 // 날짜  UI
                 let dateDiv = document.createElement('div');
@@ -117,28 +117,26 @@ function addCalenderTr() {
 
 // 이벤트 등록
 function initEvents() {
-    console.log('initEvents() CALLED!!');
+    console.log('initEvents()');
 
-    // click 이벤트 들의 처리
+    // click 이벤트 들 처리
     document.addEventListener('click', function (event) {
 
-        // 이전 달에서 이벤트 발생 시
+        // 이전달 에서 이벤트 발생 시
         if (event.target.matches('#section_wrap .btn_pre')) {
-            console.log('btn_pre CLICK!!');
-
+            console.log('btn_pre CLICKED!!');
             setPreMonth();
         }
 
-        // 다음 달에서 이벤트 발생 시
+        // 다음달 에서 이벤트 발생 시
         if (event.target.matches('#section_wrap .btn_next')) {
-            console.log('btn_next CLICK!!');
-
+            console.log('btn_next CLICKED!!');
             setNextMonth();
         }
 
-        // 달력에서 일정 등록 버튼(write)를 클릭 시
+        // 달력에서 일정 등록 버튼(write)을 클릭 시
         if (event.target.matches('#section_wrap a.write')) {
-            console.log('write CLICK');
+            console.log('write CLICKED!!');
 
             let year = current_year;
             let month = current_month + 1;
@@ -146,21 +144,54 @@ function initEvents() {
             let dateElement = event.target.closest("div").parentElement.querySelector('div.date');
             let date = dateElement ? dateElement.textContent.trim() : '';
 
-            showWeitePlanView(year, month, date);
+            showWritePlanView(year, month, date);
 
         }
 
         // 일정 등록 모달 닫기
-        if (event.target.matches('#write_plan input[value="CALCEL"]')) {
-            console.log('CALCEL BUTTON CLICK');
+        if (event.target.matches('#write_plan input[value="CANCEL"]')) {
+            console.log('CANCEL BUTTON CLICKED!!');
 
             hideWritePlanView();
 
         }
 
+        // 일정 등록 확인(WRITE) 버튼 클릭 시
+        if (event.target.matches('#write_plan input[value="WRITE"]')) {
+            console.log('WRITE BUTTON CLICKED!!');
+
+            let year = document.querySelector('#write_plan select[name="wp_year"]').value;      // 2026
+            let month = document.querySelector('#write_plan select[name="wp_month"]').value;    // 9
+            let date = document.querySelector('#write_plan select[name="wp_date"]').value;      // 10
+
+            let title = document.querySelector('#write_plan input[name="p_title"]').value;      // 제목
+            let body = document.querySelector('#write_plan input[name="p_body"]').value;        // 내용
+            let file = document.querySelector('#write_plan input[name="p_file"]').value;        // 파일
+
+            if (title === '') {
+                alert('INPUT NEW PLAN TITLE!!');
+                document.querySelector('#write_plan input[name="p_title"]').focus();
+
+            } else if (body === '') {
+                alert('INPUT NEW PLAN BODY!!');
+                document.querySelector('#write_plan input[name="p_body"]').focus();
+
+            } else if (file === '') {
+                alert('SELECT FILE!!');
+                document.querySelector('#write_plan input[name="p_file"]').focus();
+
+            } else {
+                // 비동기 방식으로 서버에 전송
+
+
+
+            }
+
+        }
+
     });
 
-    // change 이벤트 들의 처리
+    // change 이벤트 들 처리
     document.addEventListener('change', function (event) {
 
         // 달력에서 년 변경 시
@@ -173,15 +204,36 @@ function initEvents() {
             setMonthBySelectChanged();
         }
 
-    });
+        // 일정 등록 모달에서 년 변경 시
+        if (event.target.matches('#write_plan select[name="wp_year"]')) {
+            console.log('wp_year CHANGED!!');
 
+            let year = event.target.value;
+            let month = document.querySelector('#write_plan select[name="wp_month"]').value;
+
+            setSelectDateOptions(year, month, 'wp_date');
+
+        }
+
+        // 일정 등록 모달에서 월 변경 시
+        if (event.target.matches('#write_plan select[name="wp_month"]')) {
+            console.log('wp_month CHANGED!!');
+
+            let year = document.querySelector('#write_plan select[name="wp_year"]').value;
+            let month = event.target.value
+
+            setSelectDateOptions(year, month, 'wp_date');
+
+        }
+
+    });
 }
 
 function setPreMonth() {
-    console.log('setPreMonth() CALLED!!');
+    console.log('setPreMonth()');
 
-    let yearSelect = document.querySelector('select[name="p_year"]')
-    let monthSelect = document.querySelector('select[name="p_month"]')
+    let yearSelect = document.querySelector('select[name="p_year"]');
+    let monthSelect = document.querySelector('select[name="p_month"]');
 
     if (yearSelect.value == 2025 && monthSelect.value == 1) {
         alert('2025년 1월 이전은 설정할 수 없습니다.');
@@ -209,7 +261,7 @@ function setPreMonth() {
     // UI(<select>) 렌더링
     setCurrentYearAndMonthSelectUI();
 
-    // UI(<tr>) 제거
+    //  UI(<tr>) 제거
     removeCalenderTr();
 
     // UI(<tr>) 렌더링
@@ -218,10 +270,10 @@ function setPreMonth() {
 }
 
 function setNextMonth() {
-    console.log('setNextMonth() CALLED!!');
+    console.log('setNextMonth()');
 
-    let yearSelect = document.querySelector('select[name="p_year"]')
-    let monthSelect = document.querySelector('select[name="p_month"]')
+    let yearSelect = document.querySelector('select[name="p_year"]');
+    let monthSelect = document.querySelector('select[name="p_month"]');
 
     if (yearSelect.value == 2030 && monthSelect.value == 12) {
         alert('2030년 12월 이후는 설정할 수 없습니다.');
@@ -249,7 +301,7 @@ function setNextMonth() {
     // UI(<select>) 렌더링
     setCurrentYearAndMonthSelectUI();
 
-    // UI(<tr>) 제거
+    //  UI(<tr>) 제거
     removeCalenderTr();
 
     // UI(<tr>) 렌더링
@@ -271,14 +323,14 @@ function setMonthBySelectChanged() {
     let temp_year = document.querySelector('select[name="p_year"]').value;
     let temp_month = document.querySelector('select[name="p_month"]').value - 1;
 
-    let selectedCalender = new Date(temp_year, temp_month, 1);
+    let seletedCalender = new Date(temp_year, temp_month, 1);
 
     // 데이터 설정
     setCurrentCalender(
-        selectedCalender.getFullYear(),
-        selectedCalender.getMonth(),
-        selectedCalender.getDate(),
-        selectedCalender.getDay()
+        seletedCalender.getFullYear(),
+        seletedCalender.getMonth(),
+        seletedCalender.getDate(),
+        seletedCalender.getDay()
     );
 
     // 달력 UI 렌더링
@@ -287,8 +339,14 @@ function setMonthBySelectChanged() {
 
 }
 
-function showWeitePlanView(year, month, date) {
-    console.log('showWeitePlanView() CALLED!!');
+function showWritePlanView(year, month, date) {
+    console.log('showWritePlanView() CALLED!!');
+
+    document.querySelector('#write_plan select[name="wp_year"]').value = year;
+    document.querySelector('#write_plan select[name="wp_month"]').value = month;
+
+    setSelectDateOptions(year, month, 'wp_date');
+    document.querySelector('#write_plan select[name="wp_date"]').value = date;
 
     document.querySelector('#write_plan').style.display = 'block';
 
@@ -297,6 +355,34 @@ function showWeitePlanView(year, month, date) {
 function hideWritePlanView() {
     console.log('hideWritePlanView() CALLED!!');
 
+    document.querySelector('#write_plan input[name="p_title"]').value = '';
+    document.querySelector('#write_plan input[name="p_body"]').value = '';
+    document.querySelector('#write_plan input[name="p_file"]').value = '';
+
     document.querySelector('#write_plan').style.display = 'none';
 
+}
+
+function setSelectDateOptions(year, month, select_name) {   // 2026 9
+    console.log('setSelectDateOptions() CALLED!!');
+
+    console.log(month);
+
+    // SET DATA
+    let last = new Date(year, month, 0);                    // 2026 8
+    console.log(last.getFullYear());                        // 2026
+    console.log(last.getMonth());                           // 컴퓨터 날짜(8)  -> 인간 날짜(9)
+    console.log(last.getDate());                            // 30
+
+    // REMOVE OLD OPTIONS
+    let selectElement = document.querySelector(`select[name="${select_name}"]`);
+    selectElement.innerHTML = '';
+
+    // GENERATE UI(ADD NEW OPTIONS AT SELECT)
+    for (let i = 1; i <= last.getDate(); i++) {
+        let option = document.createElement('option');
+        option.value = i;
+        option.textContent = i;
+        selectElement.appendChild(option);
+    }
 }

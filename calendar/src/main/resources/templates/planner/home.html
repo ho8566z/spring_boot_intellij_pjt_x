@@ -14,7 +14,7 @@
 </head>
 <body>
 
-<header th:replace="~{/include/header_nav_footer.html::header}"/>
+<header th:replace="~{/include/header_nav_footer.html::header}" />
 
 <nav th:replace="~{/include/header_nav_footer.html::nav}"/>
 
@@ -26,7 +26,7 @@
 
         <div class="content">
 
-            <!-- 년, 월 select -->
+            <!-- 년, 월 선택 select -->
             <div class="select_wrap">
                 <a class="btn_pre" href="#none"> &nbsp;&nbsp; &#60; &nbsp;&nbsp; </a>
 
@@ -104,15 +104,14 @@
                             <option value="11">11</option>
                             <option value="12">12</option>
                         </select>월 &nbsp;&nbsp;
-                        <select name="wp_date"></select>
-
+                        <select name="wp_date">
+                        </select>
                     </div>
-
                     <div class="title_body">
                         <form>
                             <input type="text" name="p_title" placeholder="INPUT PLAN TITLE"><br>
                             <input type="text" name="p_body" placeholder="INPUT PLAN BODY"><br>
-                            <input type="file" name="p_file" placeholder="INPUT PLAN FILE"><br><br>
+                            <input type="file" name="p_file" placeholder="SELECT IMAGE FILE"><br><br>
                             <input type="button" value="WRITE">
                             <input type="reset" value="RESET">
                             <input type="button" value="CANCEL">
