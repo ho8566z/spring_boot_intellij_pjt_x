@@ -20,46 +20,46 @@ public class PlannerEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "no")
+    @Column(name = "NO")
     private int planNo;
 
-    @Column(name = "ori_no")
+    @Column(name = "ORI_NO")
     private int planOriNo;
 
-    @Column(name = "owner_id")
+    @Column(name = "OWNER_ID")
     private String planOwnerId;
 
-    @Column(name = "ori_owner_id")
+    @Column(name = "ORI_OWNER_ID")
     private String planOriOwnerId;
 
-    @Column(name = "year")
+    @Column(name = "YEAR")
     private int planYear;
 
-    @Column(name = "month")
+    @Column(name = "MONTH")
     private int planMonth;
 
-    @Column(name = "date")
+    @Column(name = "DATE")
     private int planDate;
 
-    @Column(name = "title")
+    @Column(name = "TITLE")
     private String planTitle;
 
-    @Column(name = "body")
+    @Column(name = "BODY")
     private String planBody;
 
-    @Column(name = "img_name")
+    @Column(name = "IMG_NAME")
     private String planImgName;
 
-    @Column(name = "reg_date")
+    @Column(name = "REG_DATE")
     private LocalDateTime planRegDate;
 
-    @Column(name = "mod_date")
+    @Column(name = "MOD_DATE")
     private LocalDateTime planModDate;
 
     @PrePersist
     private void prePersist() {
         planRegDate = LocalDateTime.now();
-        planModDate = LocalDateTime.now();
+        planModDate = planRegDate;
     }
 
     @PreUpdate
@@ -69,7 +69,7 @@ public class PlannerEntity {
 
     public PlannerDto toDto() {
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyy-MM-dd HH-mm-ss");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
         return PlannerDto.builder()
                 .no(planNo)
@@ -82,10 +82,9 @@ public class PlannerEntity {
                 .title(planTitle)
                 .body(planBody)
                 .img_name(planImgName)
-                .reg_date(planRegDate != null ? LocalDateTime.parse(planRegDate, formatter) : null)
-                .mod_date(planModDate != null ? LocalDateTime.parse(planModDate, formatter) : null)
+                .reg_date(planRegDate != null ? planRegDate.format(formatter) : null)
+                .mod_date(planModDate != null ? planModDate.format(formatter) : null)
                 .build();
-
     }
 
 }

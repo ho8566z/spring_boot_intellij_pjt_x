@@ -29,7 +29,8 @@ public class PlannerDto {
     private String mod_date;
 
     public PlannerEntity toEntity() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyy-MM-dd HH-mm-ss");
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
         return PlannerEntity.builder()
                 .planNo(no)
@@ -45,7 +46,7 @@ public class PlannerDto {
                 .planRegDate(reg_date != null ? LocalDateTime.parse(reg_date, formatter) : null)
                 .planModDate(mod_date != null ? LocalDateTime.parse(mod_date, formatter) : null)
                 .build();
-    }
 
+    }
 
 }
